@@ -7,13 +7,15 @@ const corsHeaders = {
 };
 
 module.exports = async (req, res) => {
-  // Set CORS headers for all requests
+  // Set CORS headers for browser extension compatibility
   Object.entries(corsHeaders).forEach(([key, val]) => res.setHeader(key, val));
 
+  // 1. Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
+  // 2. Health check endpoint for GET requests
   if (req.method !== 'POST') {
     return res.status(200).send('Vercel API is live! Send a POST request.');
   }
@@ -29,6 +31,7 @@ module.exports = async (req, res) => {
     const dataSheet = workbook.addWorksheet('Form_Template');
     const optionsSheet = workbook.addWorksheet('Options');
 
+    // Write Header Row
     dataSheet.addRow(headers);
 
     let optColIndex = 1;
@@ -65,6 +68,6 @@ module.exports = async (req, res) => {
     return res.status(200).send(Buffer.from(buffer));
 
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message, stack: err.stack });
   }
 };
