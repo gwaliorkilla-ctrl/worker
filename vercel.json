@@ -1,15 +1,8 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/generate.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/generate",
-      "dest": "api/generate.js"
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
   ]
 }
