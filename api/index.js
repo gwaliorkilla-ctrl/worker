@@ -1,25 +1,20 @@
+const express = require('express');
+const cors = require('cors');
 const ExcelJS = require('exceljs');
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': '*',
-};
+const app = express();
 
-module.exports = async (req, res) => {
-  // Set CORS headers for browser extension compatibility
-  Object.entries(corsHeaders).forEach(([key, val]) => res.setHeader(key, val));
+// Enable CORS & JSON Body Parsing
+app.use(cors({ origin: '*' }));
+app.use(express.json());
 
-  // 1. Handle preflight OPTIONS request
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+// Root test endpoint
+app.get('/api', (req, res) => {
+  res.status(200).send('Vercel API is live!');
+});
 
-  // 2. Health check endpoint for GET requests
-  if (req.method !== 'POST') {
-    return res.status(200).send('Vercel API is live! Send a POST request.');
-  }
-
+// Primary generation endpoint
+app.post('/api/generate', async (req, res) => {
   try {
     const { headers, rules } = req.body || {};
 
@@ -70,4 +65,7 @@ module.exports = async (req, res) => {
   } catch (err) {
     return res.status(500).json({ error: err.message, stack: err.stack });
   }
-};
+});
+
+// Catch-all for Express on Vercel
+module.exports = app;
