@@ -67,5 +67,9 @@ app.post('/api/generate', async (req, res) => {
   }
 });
 
+// app.listen(8000, () => {
+//         console.log(`🚀 Server running on http://localhost:8000`);
+// });
+
 // Catch-all for Express on Vercel
 module.exports = app;
